@@ -1,0 +1,41 @@
+package com.taotao.order.interceptor;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.web.servlet.HandlerInterceptor;
+import org.springframework.web.servlet.ModelAndView;
+
+import com.taotao.common.utils.CookieUtils;
+
+public class LoginInterceptor implements HandlerInterceptor {
+	
+	@Value("${TOKEN_KRY}")
+	private String TOKEN_KRY;
+
+	@Override
+	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
+			throws Exception {
+		// 执行handler之前调用此方法
+		//从cookie中取token
+		CookieUtils.getCookieValue(request, TOKEN_KRY);
+		// 返回值，true放行，false拦截
+		return false;
+	}
+
+	@Override
+	public void postHandle(HttpServletRequest request, HttpServletResponse response, Object handler,
+			ModelAndView modelAndView) throws Exception {
+		// 执行handler之后，modelAndView返回之前调用此方法
+
+	}
+
+	@Override
+	public void afterCompletion(HttpServletRequest request, HttpServletResponse response, Object handler, Exception ex)
+			throws Exception {
+		// modelAndView返回之后调用此方法，一般用来处理异常
+
+	}
+
+}

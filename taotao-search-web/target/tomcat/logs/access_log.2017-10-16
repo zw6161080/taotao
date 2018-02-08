@@ -1,0 +1,5 @@
+0:0:0:0:0:0:0:1 - - [16/Oct/2017:13:33:47 +0800] "GET /js/base-v1.js HTTP/1.1" 304 - http-bio-8085-exec-3 349
+0:0:0:0:0:0:0:1 - - [16/Oct/2017:13:33:50 +0800] "GET /search.html?q=%E6%89%8B%E6%9C%BA HTTP/1.1" 200 65464 http-bio-8085-exec-2 340597
+0:0:0:0:0:0:0:1 - - [16/Oct/2017:13:33:50 +0800] "GET /js/taotao.js HTTP/1.1" 304 - http-bio-8085-exec-5 142
+0:0:0:0:0:0:0:1 - - [16/Oct/2017:13:33:51 +0800] "GET /js/search_main.js HTTP/1.1" 304 - http-bio-8085-exec-4 270
+0:0:0:0:0:0:0:1 - - [16/Oct/2017:13:33:53 +0800] "GET /favicon.ico HTTP/1.1" 404 973 http-bio-8085-exec-7 24

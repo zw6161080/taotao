@@ -1,0 +1,43 @@
+package com.taotao.order.service.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+
+import com.taotao.common.pojo.TaotaoResult;
+import com.taotao.jedis.JedisClient;
+import com.taotao.order.pojo.OrderInfo;
+import com.taotao.order.service.OrderService;
+import com.taotao.pojo.TbOrder;
+import com.taotao.pojo.TbOrderItem;
+import com.taotao.pojo.TbOrderShipping;
+
+@Service
+public class OrderServiceImpl implements OrderService {
+	
+	@Autowired
+	private TbOrder tbOrder;
+	@Autowired
+	private TbOrderItem tbOrderItem;
+	@Autowired
+	private TbOrderShipping tbOrderShipping;
+	@Autowired
+	private JedisClient jedisClient;
+	
+	@Value("${ORDER_ID_GEN_KEY}")
+	private String ORDER_ID_GEN_KEY;
+	@Value("${ORDER_ID_BEGEN_KEY}")
+	private String ORDER_ID_BEGEN_KEY;
+
+	@Override
+	public TaotaoResult createOrder(OrderInfo orderInfo) {
+		//生成订单号之前先判断是否存在，如果不存在先设置一个初始值
+		if(!jedisClient.exists(ORDER_ID_GEN_KEY)){
+			jedisClient.set(ORDER_ID_GEN_KEY, ORDER_ID_BEGEN_KEY);
+		}
+		//生成订单号，用redis的incr自增方法生成
+		String orderId = jedisClient.incr(ORDER_ID_GEN_KEY).toString();
+		return null;
+	}
+
+}

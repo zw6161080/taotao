@@ -1,0 +1,68 @@
+package com.taotao.sso.service.impl;
+
+import java.util.List;
+
+import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.taotao.common.pojo.TaotaoResult;
+import com.taotao.mapper.TbUserMapper;
+import com.taotao.pojo.TbUser;
+import com.taotao.pojo.TbUserExample;
+import com.taotao.pojo.TbUserExample.Criteria;
+import com.taotao.sso.service.UserService;
+
+
+@Service
+public class UserServiceImpl implements UserService {
+	
+	@Autowired
+	private TbUserMapper tbUserMapper;
+
+	@Override
+	public TaotaoResult checkData(String Data, int type) {
+
+		TbUserExample example=new TbUserExample();
+		Criteria criteria = example.createCriteria();
+		//1代表姓名查询
+		if(type == 1){
+			criteria.andUsernameEqualTo(Data);
+		//2代表电话查询
+		}else if(type == 2){
+			criteria.andPhoneEqualTo(Data);
+		//3代表邮箱查询
+		}else if(type == 3){
+			criteria.andEmailEqualTo(Data);
+		}else{
+			return TaotaoResult.build(400, "数据中有非法的参数");
+		}
+		
+		List<TbUser> list = tbUserMapper.selectByExample(example);
+		//判断返回的查询结果是否为空，如果不为空说明数据库中存在这样的用户信息，应当返回false
+		if(list!=null&&list.size()>0){
+			return TaotaoResult.ok(false);
+		}
+		
+		return TaotaoResult.ok(true);
+	}
+
+	@Override
+	public TaotaoResult register(TbUser user) {
+
+		if(StringUtils.isBlank(user.getUsername())){
+			return TaotaoResult.build(400, "用户名不能为空");
+		}
+		TaotaoResult result = checkData(user.getUsername(), 1);
+		if(!(boolean) result.getData()){
+			return TaotaoResult.build(400, "用户名重复");
+		}
+		if(StringUtils.isBlank(user.getPassword())){
+			return TaotaoResult.build(400, "密码不能为空");
+		}
+		
+		
+		return null;
+	}
+
+}

@@ -1,0 +1,32 @@
+package com.taotao.portal.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.taotao.content.service.ContentService;
+
+@Controller
+public class IndexController {
+	@Value("{$AD1_CATEGORY_ID}")
+	private Long AD1_CATEGORY_ID;
+	@Value("{$AD1_HEIGHT}")
+	private Integer AD1_HEIGHT;
+	@Value("{$AD1_HEIGHT_B}")
+	private Integer AD1_HEIGHT_B;
+	@Value("{$AD1_WIDTH}")
+	private Integer AD1_WIDTH;
+	@Value("{$AD1_HEIGHT_B}")
+	private Integer AD1_WIDTH_B;
+	@Autowired
+	private ContentService contentService;
+	
+	@RequestMapping("/index")
+	public String showIndex(){
+		
+		return "index";
+	}
+	
+
+}

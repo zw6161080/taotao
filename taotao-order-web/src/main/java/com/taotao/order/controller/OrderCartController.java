@@ -1,0 +1,73 @@
+package com.taotao.order.controller;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
+
+import org.apache.commons.lang3.StringUtils;
+import org.joda.time.DateTime;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+
+import com.taotao.common.pojo.TaotaoResult;
+import com.taotao.common.utils.CookieUtils;
+import com.taotao.common.utils.JsonUtils;
+import com.taotao.order.pojo.OrderInfo;
+import com.taotao.order.service.OrderService;
+import com.taotao.pojo.TbItem;
+import com.taotao.pojo.TbUser;
+
+@Controller
+public class OrderCartController {
+	
+	@Autowired
+	private OrderService orderService;
+	@Value("${CART_KEY}")
+	private String CART_KEY;
+	
+	@RequestMapping("/order/order-cart")
+	public String showOrderCart(HttpServletRequest request){
+		
+		//取用户id
+		TbUser user = (TbUser) request.getAttribute("user");
+		System.out.println(user.getUsername());
+		//从cookie中取得商品
+		List<TbItem> cartList = getCartList(request);
+		//传递到页面
+		request.setAttribute("cartList", cartList);
+		return "order-cart";
+	}
+	
+	//从cookie中取得商品列表
+	private List<TbItem> getCartList(HttpServletRequest request){
+		//从cookie中取商品列表
+		String json = CookieUtils.getCookieValue(request, CART_KEY, true);
+		//判断从cookie中得到的商品列表是否为空，即cookie是否有商品
+		if(StringUtils.isBlank(json)){
+			return new ArrayList<>();
+		}
+		//如果有商品就将得到的json返回成商品列表返回
+		List<TbItem> list = JsonUtils.jsonToList(json, TbItem.class);
+		return list;
+	}
+	
+	//生成订单处理
+	@RequestMapping(value="/order/create",method=RequestMethod.POST)
+	public String createOrder(OrderInfo orderInfo,Model model){
+		TaotaoResult taotaoResult = orderService.createOrder(orderInfo);
+		//向页面中传递需要的参数
+		model.addAttribute("orderId", taotaoResult.getData().toString());
+		model.addAttribute("payment", orderInfo.getPayment());
+		//预计送达时间，三天后送达
+		DateTime dateTime=new DateTime();
+		dateTime=dateTime.plusDays(3);
+		model.addAttribute("date", dateTime.toString("yyyy-MM-dd"));
+		return "success";
+	}
+
+}

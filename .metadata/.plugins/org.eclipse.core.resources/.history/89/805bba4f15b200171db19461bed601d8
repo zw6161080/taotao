@@ -1,0 +1,32 @@
+package com.taotao.order.service.impl;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.taotao.common.pojo.TaotaoResult;
+import com.taotao.jedis.JedisClient;
+import com.taotao.order.pojo.OrderInfo;
+import com.taotao.order.service.OrderService;
+import com.taotao.pojo.TbOrder;
+import com.taotao.pojo.TbOrderItem;
+import com.taotao.pojo.TbOrderShipping;
+
+@Service
+public class OrderServiceImpl implements OrderService {
+	
+	@Autowired
+	private TbOrder tbOrder;
+	@Autowired
+	private TbOrderItem tbOrderItem;
+	@Autowired
+	private TbOrderShipping tbOrderShipping;
+	@Autowired
+	private JedisClient jedisClient;
+
+	@Override
+	public TaotaoResult createOrder(OrderInfo orderInfo) {
+		//
+		return null;
+	}
+
+}
